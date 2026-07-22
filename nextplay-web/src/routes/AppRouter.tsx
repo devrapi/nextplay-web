@@ -11,10 +11,17 @@ import NewsPage from '../features/public/NewsPage';
 import GalleryPage from '../features/public/GalleryPage';
 import ContactPage from '../features/public/ContactPage';
 import AdminDashboardPage from '../features/admin/AdminDashboardPage';
+import { GuestRoute, LoginPage, ProtectedRoute } from '../features/auth';
 
 export default function AppRouter() {
   return (
     <Routes>
+      {/* Guest-only: redirect to /admin if already authenticated */}
+      <Route element={<GuestRoute />}>
+        <Route path="/login" element={<LoginPage />} />
+      </Route>
+
+      {/* Public site */}
       <Route element={<PublicLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/schedule" element={<SchedulePage />} />
@@ -27,8 +34,11 @@ export default function AppRouter() {
         <Route path="/contact" element={<ContactPage />} />
       </Route>
 
-      <Route path="/admin" element={<AdminLayout />}>
-        <Route index element={<AdminDashboardPage />} />
+      {/* Protected admin area */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboardPage />} />
+        </Route>
       </Route>
     </Routes>
   );
