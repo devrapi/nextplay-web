@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ChevronDown, LogOut, User, Shield } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import ConfirmDialog from '../../../shared/components/ConfirmDialog';
 
@@ -13,7 +14,6 @@ export default function UserDropdown() {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -50,43 +50,46 @@ export default function UserDropdown() {
           onClick={() => setOpen((v) => !v)}
           aria-haspopup="true"
           aria-expanded={open}
-          className="flex items-center gap-2 rounded-md px-2 py-1 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition"
+          className="flex items-center gap-2.5 rounded-xl px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 transition"
         >
-          {/* Avatar */}
-          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-yellow-400 text-xs font-bold text-gray-900">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-xs font-bold text-white shadow-sm">
             {initials}
           </span>
-          <span className="hidden sm:block max-w-[120px] truncate">{user?.name}</span>
-          {/* Chevron */}
-          <svg
-            className={`h-4 w-4 transition-transform ${open ? 'rotate-180' : ''}`}
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
-          </svg>
+          <span className="hidden md:block max-w-[100px] truncate font-medium">{user?.name}</span>
+          <ChevronDown className={`hidden md:block h-4 w-4 text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`} />
         </button>
 
         {open && (
-          <div className="absolute right-0 mt-1 w-48 rounded-md bg-gray-700 py-1 shadow-lg ring-1 ring-black/20 z-40">
-            {/* User info */}
-            <div className="border-b border-gray-600 px-4 py-2">
-              <p className="truncate text-xs font-medium text-white">{user?.name}</p>
-              <p className="truncate text-xs text-gray-400">{user?.email}</p>
+          <div className="absolute right-0 mt-2 w-56 rounded-xl bg-white py-1 shadow-lg ring-1 ring-gray-200 z-40 animate-fade-in">
+            <div className="px-4 py-3 border-b border-gray-100">
+              <p className="truncate text-sm font-semibold text-gray-900">{user?.name}</p>
+              <p className="truncate text-xs text-gray-500 mt-0.5">{user?.email}</p>
             </div>
 
-            {/* Logout */}
-            <button
-              type="button"
-              onClick={() => { setOpen(false); setConfirming(true); }}
-              className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:bg-gray-600 hover:text-white transition"
-            >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />
-              </svg>
-              Sign out
-            </button>
+            <div className="px-3 py-2 border-b border-gray-100">
+              <div className="flex items-center gap-2 px-2 py-1.5 text-xs text-gray-500">
+                <Shield className="h-3.5 w-3.5 text-indigo-500" />
+                <span>{(user?.roles ?? ['User']).join(', ')}</span>
+              </div>
+            </div>
+
+            <div className="py-1">
+              <button
+                type="button"
+                className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition"
+              >
+                <User className="h-4 w-4 text-gray-400" />
+                Profile
+              </button>
+              <button
+                type="button"
+                onClick={() => { setOpen(false); setConfirming(true); }}
+                className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition"
+              >
+                <LogOut className="h-4 w-4" />
+                Sign out
+              </button>
+            </div>
           </div>
         )}
       </div>

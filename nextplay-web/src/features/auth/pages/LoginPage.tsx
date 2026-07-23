@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { isAxiosError } from 'axios';
+import { Eye, EyeOff } from 'lucide-react';
 import FormField from '../../../shared/components/FormField';
 import FormButton from '../../../shared/components/FormButton';
 import { useAuth } from '../hooks/useAuth';
@@ -80,7 +81,7 @@ export default function LoginPage() {
 
     try {
       await login({ email: values.email, password: values.password });
-      navigate('/admin/dashboard', { replace: true });
+      navigate('/admin', { replace: true });
     } catch (error) {
       setApiError(resolveApiError(error));
     } finally {
@@ -89,27 +90,24 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
-
-        {/* Branding */}
-        <div className="mb-8 text-center">
-          <span className="text-3xl font-extrabold text-yellow-400 tracking-tight">NextPlay</span>
-          <p className="mt-1 text-sm text-gray-400">League Management Portal</p>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center px-4">
+      <div className="w-full max-w-sm animate-fade-in">
+        <div className="mb-10 text-center">
+          <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-600 shadow-lg shadow-indigo-200 mb-4">
+            <span className="text-xl font-bold text-white">NP</span>
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900">NextPlay</h1>
+          <p className="mt-1 text-sm text-gray-500">Sign in to your admin portal</p>
         </div>
 
-        {/* Card */}
-        <div className="rounded-xl bg-gray-800 p-8 shadow-lg">
-          <h1 className="mb-6 text-lg font-semibold text-white">Sign in to your account</h1>
-
+        <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
           {apiError && (
-            <div role="alert" className="mb-5 rounded-md bg-red-500/10 border border-red-500/30 px-4 py-3 text-sm text-red-400">
+            <div role="alert" className="mb-6 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
               {apiError}
             </div>
           )}
 
           <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
-
             <FormField
               id="email"
               name="email"
@@ -128,7 +126,7 @@ export default function LoginPage() {
               name="password"
               type={showPassword ? 'text' : 'password'}
               label="Password"
-              placeholder="••••••••"
+              placeholder="Enter your password"
               autoComplete="current-password"
               value={values.password}
               onChange={handleChange}
@@ -138,46 +136,34 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="text-gray-400 hover:text-yellow-400 transition"
+                  className="text-gray-400 hover:text-gray-600 transition"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
-                  {showPassword ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-5 0-9-4-9-7s4-7 9-7a9.97 9.97 0 016.375 2.325M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 3l18 18" />
-                    </svg>
-                  ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                  )}
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               }
             />
 
-            {/* Remember Me */}
-            <label className="flex items-center gap-2 cursor-pointer select-none">
+            <label className="flex items-center gap-2.5 cursor-pointer select-none">
               <input
                 type="checkbox"
                 name="rememberMe"
                 checked={values.rememberMe}
                 onChange={handleChange}
                 disabled={isLoading}
-                className="h-4 w-4 rounded border-gray-600 bg-gray-700 accent-yellow-400"
+                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
               />
-              <span className="text-sm text-gray-300">Remember me</span>
+              <span className="text-sm text-gray-600">Remember me</span>
             </label>
 
-            <FormButton type="submit" loading={isLoading} disabled={isLoading}>
-              {isLoading ? 'Signing in…' : 'Sign in'}
+            <FormButton type="submit" loading={isLoading} className="w-full">
+              {isLoading ? 'Signing in\u2026' : 'Sign in'}
             </FormButton>
-
           </form>
         </div>
 
-        <p className="mt-6 text-center text-xs text-gray-500">
-          © {new Date().getFullYear()} NextPlay. All rights reserved.
+        <p className="mt-8 text-center text-xs text-gray-400">
+          &copy; {new Date().getFullYear()} NextPlay. All rights reserved.
         </p>
       </div>
     </div>
